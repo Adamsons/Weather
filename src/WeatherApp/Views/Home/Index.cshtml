@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Weather App</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <div class="container body-content">
+        <div class="row">
+            <div class="col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 ">
+                <div class="panel panel-default">
+                    <div class="panel-heading text-center">
+                        <strong>WeatherApp</strong>
+                    </div>
+
+                    <div class="panel-body">
+                        <form>
+                            <div>
+                                <strong>Temperature</strong>
+
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="tempRadios" data-bind="checked: weatherVM.Temperature" value="DegreeCelsius" checked>
+                                        Celcius
+                                    </label>
+                                </div>
+
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="tempRadios" data-bind="checked: weatherVM.Temperature" value="DegreeFahrenheit">
+                                        Fahrenheit
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div>
+                                <strong>Wind speed</strong>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="windSpeedRadios" data-bind="checked: weatherVM.WindSpeed" value="MilePerHour" checked>
+                                        Mph
+                                    </label>
+                                </div>
+
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="windSpeedRadios" data-bind="checked: weatherVM.WindSpeed" value="KilometerPerHour">
+                                        Kph
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="form-group">
+                                    <label for="location">Please enter your location</label>
+                                    <input data-bind="value: weatherVM.Location" type="text" class="form-control" id="location" placeholder="Location">
+                                </div>
+                                <button data-bind="click: getWeather" class="btn btn-default" type="button">Go!</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="panel-footer"></div>
+                </div>
+
+                <div data-bind="visible: apiResult.valid" class="panel panel-default">
+                    <div class="panel-heading text-center">
+                        <strong>Weather for <span data-bind="text: apiResult.Location"></span></strong>
+                    </div>
+
+                    <div class="panel-body">
+                        <div>
+                            <strong data-bind="visible:apiResult.valid">Temperature:</strong>
+                            <label data-bind="text: apiResult.Temperature"></label>
+                        </div>
+                        <div>
+                            <strong data-bind="visible:apiResult.valid">WindSpeed:</strong>
+                            <label data-bind="text:apiResult.WindSpeed"></label>
+                        </div>
+                        <div>
+                            <strong data-bind="visible: apiResult.valid">Last Updated:</strong>
+                            <label data-bind="text: apiResult.LastUpdated"></label>
+                        </div>
+                    </div>
+                    <div class="panel-footer"></div>
+                </div>
+
+                <div data-bind="visible: errorMessage" class="panel panel-default">
+                    <div class="panel-heading text-center">
+                        <strong>Oops!</strong>
+                    </div>
+
+                    <div class="panel-body">
+                        <div>
+                            <label data-bind="text: errorMessage"></label>
+                        </div>
+                    </div>
+                    <div class="panel-footer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/knockout")
+    @Scripts.Render("~/bundles/viewModels")
+</body>
+</html>
