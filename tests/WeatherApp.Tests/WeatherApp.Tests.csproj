@@ -104,7 +104,9 @@
     <Compile Include="WeatherApp.Service\Extensions\ExtensionsTests.cs" />
     <Compile Include="WeatherApp.Service\ResultTypes\WeatherResultTests.cs" />
     <Compile Include="WeatherApp.Service\Services\AccuWeatherServiceTests.cs" />
+    <Compile Include="WeatherApp.Service\Services\BaseWeatherServiceTests.cs" />
     <Compile Include="WeatherApp.Service\Services\BbcWeatherServiceTests.cs" />
+    <Compile Include="WeatherApp.Service\Services\WeatherAggregatorServiceTests.cs" />
     <Compile Include="WeatherApp\Controllers\WeatherControllerTests.cs" />
   </ItemGroup>
   <ItemGroup />

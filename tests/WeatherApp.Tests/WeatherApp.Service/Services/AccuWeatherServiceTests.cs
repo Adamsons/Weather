@@ -29,18 +29,6 @@ namespace WeatherApp.Tests.WeatherApp.Service.Services
         }
 
         [Fact]
-        public void GetWeatherCallsExecute()
-        {
-            var restClient = new Mock<IRestClient>();
-            restClient.Setup(o => o.Execute(It.IsAny<IRestRequest>())).Returns(TestData.MockResult());
-
-            _weatherService = new AccuWeatherService(restClient.Object, ApiUrl);
-            _weatherService.GetWeather(Location);
-
-            restClient.Verify(o => o.Execute(It.IsAny<IRestRequest>()));
-        }
-
-        [Fact]
         public void GetWeatherDeserializesResult()
         {
             var restClient = new Mock<IRestClient>();

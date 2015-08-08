@@ -53,6 +53,7 @@ namespace WeatherApp.App_Start
         private static void RegisterServices(IKernel kernel)
         {
             kernel.Bind<IRestClient>().To<RestClient>();
+            kernel.Bind<IWeatherAggregatorService>().To<WeatherAggregatorService>();
             kernel.Bind<IWeatherService>().To<AccuWeatherService>().WithConstructorArgument("apiUrl", ApiConfig.AccuWeatherApiUrl);
             kernel.Bind<IWeatherService>().To<BbcWeatherService>().WithConstructorArgument("apiUrl", ApiConfig.BbcWeatherApiUrl);
         }        

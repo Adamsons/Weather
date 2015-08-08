@@ -21,13 +21,13 @@ namespace WeatherApp.Service.Services.Concrete
             _restClient.BaseUrl = new Uri(apiUrl);
         }
 
-        protected WeatherApiResult GetWeather<T>(string location) where T : WeatherApiResult
+        protected async Task<WeatherApiResult> GetWeather<T>(string location) where T : WeatherApiResult
         {
             IRestRequest request = new RestRequest("weather/{location}", Method.GET);
             request.AddUrlSegment("location", location);
             request.Timeout = TimeoutMiliseconds;
 
-            var result = _restClient.Execute(request);
+            var result = await _restClient.ExecuteTaskAsync(request);
 
             if (result.ErrorException != null)
                 Debug.WriteLine(result.ErrorException);

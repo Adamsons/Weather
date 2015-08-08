@@ -20,30 +20,27 @@ namespace WeatherApp.Tests.WeatherApp.Controllers
         private const string Location = "Liverpool";
 
         [Fact]
-        public void NullModelReturnsBadRequest()
+        public async void NullModelReturnsBadRequest()
         {
             var controller = new WeatherController(null);
-            var result = controller.GetWeather(null, null, null);
+            var result = await controller.GetWeather(null, null, null);
             result.Should().BeOfType<BadRequestResult>();
         }
 
         [Fact]
-        public void ReturnsJsonResult()
+        public async void ReturnsJsonResult()
         {
-            var serviceA = new Mock<IWeatherService>();
-            var serviceB = new Mock<IWeatherService>();
-
             WeatherApiResult resultA = TestData.GetTestWeatherResult(10, 15);
             WeatherApiResult resultB = TestData.GetTestWeatherResult(11, 20);
+            var results = new List<WeatherApiResult> {resultA, resultB};
 
-            serviceA.Setup(o => o.GetWeather(Location)).Returns(resultA);
-            serviceB.Setup(o => o.GetWeather(Location)).Returns(resultB);
+            var service = new Mock<IWeatherAggregatorService>();
+            service.Setup(o => o.GetWeatherResults(Location)).ReturnsAsync(results);
 
-            var services = new List<IWeatherService> { serviceA.Object, serviceB.Object };
-            var controller = new WeatherController(services);
+            var controller = new WeatherController(service.Object);
 
-            var result = controller.GetWeather(Location, "DegreeCelsius", "KilometerPerHour");
-            
+            var result = await controller.GetWeather(Location, "DegreeCelsius", "KilometerPerHour");
+
             result.Should().BeOfType<JsonResult<WeatherApiResult>>();
 
             var jsonResult = result as JsonResult<WeatherApiResult>;
@@ -51,11 +48,11 @@ namespace WeatherApp.Tests.WeatherApp.Controllers
         }
 
         [Fact]
-        public void CantParseUnitsOfMeasurementReturnsBadRequest()
+        public async void CantParseUnitsOfMeasurementReturnsBadRequest()
         {
             var controller = new WeatherController(null);
 
-            var result = controller.GetWeather(Location, "a", "b");
+            var result = await controller.GetWeather(Location, "a", "b");
             result.Should().BeOfType<BadRequestResult>();
         }
     }

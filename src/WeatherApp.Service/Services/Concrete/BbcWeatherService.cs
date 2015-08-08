@@ -14,9 +14,9 @@ namespace WeatherApp.Service.Services.Concrete
     {
         public BbcWeatherService(IRestClient restClient, string apiUrl) : base(restClient, apiUrl) { }
 
-        public WeatherApiResult GetWeather(string location)
+        public async Task<WeatherApiResult> GetWeather(string location)
         {
-            return base.GetWeather<BbcWeatherResult>(location);
+            return await base.GetWeather<BbcWeatherResult>(location);
         }
     }
 }

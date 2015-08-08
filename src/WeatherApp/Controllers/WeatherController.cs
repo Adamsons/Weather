@@ -4,6 +4,8 @@ using System.Drawing.Text;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Http;
 using UnitsNet.Units;
 using WeatherApp.Models;
@@ -16,16 +18,16 @@ namespace WeatherApp.Controllers
     [RoutePrefix("api/weather")]
     public class WeatherController : ApiController
     {
-        private ICollection<IWeatherService> _weatherServices;
+        private readonly IWeatherAggregatorService _weatherAggregator;
        
-        public WeatherController(ICollection<IWeatherService> weatherServices)
+        public WeatherController(IWeatherAggregatorService weatherAggregator)
         {
-            _weatherServices = weatherServices;
+            _weatherAggregator = weatherAggregator;
         }
 
         [HttpGet]
         [Route("")]
-        public IHttpActionResult GetWeather([FromUri]string Location, [FromUri]string Temperature, [FromUri]string WindSpeed)
+        public async Task<IHttpActionResult> GetWeather([FromUri]string Location, [FromUri]string Temperature, [FromUri]string WindSpeed)
         {
             if (Location == null || Temperature == null || WindSpeed == null)
                 return BadRequest();
@@ -36,28 +38,13 @@ namespace WeatherApp.Controllers
             if (TemperatureUnit.TryParse(Temperature, out temperatureUnit) &&
                 SpeedUnit.TryParse(WindSpeed, out windSpeedUnit))
             {
-                List<WeatherApiResult> apiResults = GetWeatherResults(Location);
+                var apiResults = await _weatherAggregator.GetWeatherResults(Location);
                 WeatherApiResult resultAverage = apiResults.AverageWeatherResults(temperatureUnit, windSpeedUnit);
 
                 return Json(resultAverage);
             }
 
             return BadRequest();
-        }
-
-        private List<WeatherApiResult> GetWeatherResults(string location)
-        {
-            List<WeatherApiResult> apiResults = new List<WeatherApiResult>();
-
-            foreach (var service in _weatherServices)
-            {
-                var result = service.GetWeather(location);
-
-                if (result != null)
-                    apiResults.Add(result);
-            }
-
-            return apiResults;
         }
     }
 }
